@@ -9,10 +9,12 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "boom": "^7.3.0",
     "koa": "^2.6.2",
     "koa-compose": "^4.1.0",
     "koa-router": "^7.4.0",
     "koa-send": "^5.0.0",
+    "sharp": "^0.21.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",

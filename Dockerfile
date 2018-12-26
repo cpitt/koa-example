@@ -1,9 +1,9 @@
-FROM node:10-alpine AS intermediate
+FROM node:10 AS intermediate
 # Add node_modules to image
 ADD package.json package-lock.json /tmp/
 RUN cd /tmp && npm install
 
-FROM node:10-alpine
+FROM node:10
 COPY --from=intermediate /tmp/node_modules /tmp/node_modules
 WORKDIR /usr/src/app
 
