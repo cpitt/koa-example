@@ -1,8 +1,8 @@
-const path = require('path');
 const listFiles = require('../../../../utils/listFiles');
+const config = require('../config.js');
 
 async function listImagesController(ctx) {
-  const imagePath = path.resolve(__dirname, '../../../../images/original');
+  const imagePath = config.imagePaths.original;
   const images = await listFiles(imagePath);
   ctx.body = {
     count: images.length,

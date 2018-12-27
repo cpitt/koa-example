@@ -32,7 +32,7 @@ async function resizeImage(
     .resize({ ...options, fit: sharp.fit.fill })
     .toFile(path.resolve(outputDir, outputFilename));
 
-  return path.resolve(outputDir, outputFilename);
+  return outputFilename;
 }
 
 module.exports = resizeImage;
