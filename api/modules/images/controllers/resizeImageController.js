@@ -1,19 +1,32 @@
 const path = require('path');
-const send = require('koa-send');
-const resizeImage = require('../../../../utils/resizeImage');
-const config = require('../config.js');
+const Boom = require('boom');
+const fileExists = require('../utils/fileExists');
+const resizeImage = require('../utils/resizeImage');
+const { imagePaths } = require('../config.js');
 
 async function resizeImageController(ctx) {
-  const original = path.resolve(
-    config.imagePaths.original,
-    ctx.params.imageName,
-  );
-  const width = parseInt(ctx.query.width, 10) || null;
-  const height = parseInt(ctx.query.height, 10) || null;
-  const outputdir = config.imagePaths.resized;
+  const { imageName, resizeOptions } = ctx.request.body;
 
-  const resized = await resizeImage(original, outputdir, { width, height });
-  return send(ctx, resized, { root: outputdir });
+  if (!imageName) {
+    throw Boom.badRequest('request body must contain valid imageName');
+  }
+
+  const originalImagePath = path.resolve(imagePaths.original, imageName);
+  if (!(await fileExists(originalImagePath))) {
+    throw Boom.badRequest(`${imageName} is not a valid original image`);
+  }
+
+  if (!resizeOptions || (!resizeOptions.width && !resizeOptions.height)) {
+    throw Boom.badRequest(
+      'body.resizeOptions must be present and contain width or height',
+    );
+  }
+
+  ctx.body = await resizeImage(
+    originalImagePath,
+    imagePaths.resized,
+    resizeOptions,
+  );
 }
 
 module.exports = resizeImageController;

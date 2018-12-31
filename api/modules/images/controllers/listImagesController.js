@@ -1,13 +1,20 @@
-const listFiles = require('../../../../utils/listFiles');
-const config = require('../config.js');
+const listFiles = require('../utils/listFiles');
 
-async function listImagesController(ctx) {
-  const imagePath = config.imagePaths.original;
-  const images = await listFiles(imagePath);
-  ctx.body = {
-    count: images.length,
-    images,
+/**
+ * create a listFiles controller
+ * @param {string} path directory to list images
+ * @return {function} configured listFiles controller
+ */
+function createListImagesController(path) {
+  return async ctx => {
+    const files = await listFiles(path, {
+      permittedExtensions: ['.jpg', '.jpeg', '.gif', '.png'],
+    });
+    ctx.body = {
+      count: files.length,
+      files,
+    };
   };
 }
 
-module.exports = listImagesController;
+module.exports = createListImagesController;

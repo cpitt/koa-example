@@ -1,9 +1,10 @@
 const send = require('koa-send');
-const config = require('../config.js');
 
-async function getImage(ctx) {
-  const { imageName } = ctx.params;
-  await send(ctx, imageName, { root: config.imagePaths.original });
+function createGetImageController(imagePath) {
+  return async ctx => {
+    const { imageName } = ctx.params;
+    await send(ctx, imageName, { root: imagePath });
+  };
 }
 
-module.exports = getImage;
+module.exports = createGetImageController;
